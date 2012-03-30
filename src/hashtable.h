@@ -8,6 +8,18 @@
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
 
+#ifndef HASH_ENTRY_TYPE
+#define HASH_ENTRY_TYPE json_t
+#endif
+
+#ifndef HASH_INCREF
+#define HASH_INCREF(o) json_incref(o)
+#endif
+
+#ifndef HASH_DECREF
+#define HASH_DECREF(o) json_decref(o)
+#endif
+
 typedef size_t (*key_hash_fn)(const void *key);
 typedef int (*key_cmp_fn)(const void *key1, const void *key2);
 typedef void (*free_fn)(void *key);
@@ -24,7 +36,7 @@ struct hashtable_pair {
     size_t hash;
     struct hashtable_list list;
     struct hashtable_list iter; /* insertion-order iteration */
-    json_t *value;
+    HASH_ENTRY_TYPE *value;
     size_t serial;
     char key[1];
 };
@@ -89,7 +101,7 @@ void hashtable_close(hashtable_t *hashtable);
  */
 int hashtable_set(hashtable_t *hashtable,
                   const char *key, size_t serial,
-                  json_t *value);
+                  HASH_ENTRY_TYPE *value);
 
 /**
  * hashtable_get - Get a value associated with a key
@@ -186,6 +198,6 @@ void *hashtable_iter_value(void *iter);
  * @iter: The iterator
  * @value: The value to set
  */
-void hashtable_iter_set(void *iter, json_t *value);
+void hashtable_iter_set(void *iter, HASH_ENTRY_TYPE *value);
 
 #endif

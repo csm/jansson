@@ -181,7 +181,7 @@ static int hashtable_do_del(hashtable_t *hashtable,
 
     list_remove(&pair->list);
     list_remove(&pair->iter);
-    json_decref(pair->value);
+    HASH_DECREF(pair->value);
 
     jsonp_free(pair);
     hashtable->size--;
@@ -198,7 +198,7 @@ static void hashtable_do_clear(hashtable_t *hashtable)
     {
         next = list->next;
         pair = list_to_pair(list);
-        json_decref(pair->value);
+        HASH_DECREF(pair->value);
         jsonp_free(pair);
     }
 
@@ -269,7 +269,7 @@ void hashtable_close(hashtable_t *hashtable)
 
 int hashtable_set(hashtable_t *hashtable,
                   const char *key, size_t serial,
-                  json_t *value)
+                  HASH_ENTRY_TYPE *value)
 {
     pair_t *pair;
     bucket_t *bucket;
@@ -287,7 +287,7 @@ int hashtable_set(hashtable_t *hashtable,
 
     if(pair)
     {
-        json_decref(pair->value);
+        HASH_DECREF(pair->value);
         pair->value = value;
     }
     else
@@ -402,11 +402,11 @@ void *hashtable_iter_value(void *iter)
     return pair->value;
 }
 
-void hashtable_iter_set(void *iter, json_t *value)
+void hashtable_iter_set(void *iter, HASH_ENTRY_TYPE *value)
 {
     pair_t *pair = iter_to_pair((list_t *)iter);
 
-    json_decref(pair->value);
+    HASH_DECREF(pair->value);
     pair->value = value;
 
 }
