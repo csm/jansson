@@ -31,6 +31,10 @@
    JSON_INTEGER_IS_LONG_LONG is defined to 1, otherwise to 0. */
 #define JSON_INTEGER_IS_LONG_LONG @json_have_long_long@
 
+/* If you need multiple-precision integers, define
+   JSON_LARGE_INTEGERS to 1. *l
+#define JSON_LARGE_INTEGERS @json_large_integers@
+
 /* If locale.h and localeconv() are available, define to 1,
    otherwise to 0. */
 #define JSON_HAVE_LOCALECONV @json_have_localeconv@

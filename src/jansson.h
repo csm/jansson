@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>  /* for size_t */
 #include <stdarg.h>
+#include <stdint.h>
 
 #include <jansson_config.h>
 
@@ -51,18 +52,26 @@ typedef struct {
     json_type type;
     size_t refcount;
 } json_t;
-
+    
+#if JSON_LARGE_INTEGERS
+typedef struct {
+    int neg:1;
+    int size:7;
+    uint32_t magnitude[];
+} json_int_t;
+#else
 #if JSON_INTEGER_IS_LONG_LONG
 #ifdef _WIN32
 #define JSON_INTEGER_FORMAT "I64d"
 #else
-#define JSON_INTEGER_FORMAT "lld"
+#define JSON_INTEGER_FORMAT "llu"
 #endif
 typedef long long json_int_t;
 #else
 #define JSON_INTEGER_FORMAT "ld"
 typedef long json_int_t;
 #endif /* JSON_INTEGER_IS_LONG_LONG */
+#endif /* JSON_LARGE_INTEGERS */
 
 #define json_typeof(json)      ((json)->type)
 #define json_is_object(json)   (json && json_typeof(json) == JSON_OBJECT)

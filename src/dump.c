@@ -180,16 +180,32 @@ static int do_dump(const json_t *json, size_t flags, int depth,
 
         case JSON_INTEGER:
         {
+#if JSON_LARGE_INTEGERS
+            json_int_t i = json_integer_value(json);
+            if (i.neg == 1)
+                dump("-", 1, data);
+            for (int idx = 0; idx < i.size; idx++)
+            {
+                char buffer[MAX_INTEGER_STR_LENGTH];
+                int size;
+                
+                if (idx == 0)
+                    size = snprintf(buffer, MAX_INTEGER_STR_LENGTH, "%u", i.magnitude[idx]);
+                else
+                    size = snprintf(buffer, MAX_INTEGER_STR_LENGTH, "%010u", i.magnitude[idx]);
+            }
+#else
             char buffer[MAX_INTEGER_STR_LENGTH];
             int size;
-
+            
             size = snprintf(buffer, MAX_INTEGER_STR_LENGTH,
                             "%" JSON_INTEGER_FORMAT,
                             json_integer_value(json));
             if(size >= MAX_INTEGER_STR_LENGTH)
                 return -1;
-
             return dump(buffer, size, data);
+#endif
+
         }
 
         case JSON_REAL:
