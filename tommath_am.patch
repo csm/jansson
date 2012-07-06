@@ -1,7 +1,7 @@
 diff --git a/Makefile.am b/Makefile.am
 new file mode 100644
 index 0000000..7e6f119
---- /dev/null
+--- a/Makefile.am
 +++ b/Makefile.am
 @@ -0,0 +1,31 @@
 +include_HEADERS = tommath.h tommath_class.h tommath_superclass.h
